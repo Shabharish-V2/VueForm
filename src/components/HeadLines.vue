@@ -8,7 +8,8 @@
             </div>
             <!-- Retrive -->
             <div class="retrive">
-                <button class="r-btn">Retrive</button></div>
+                <button class="r-btn">Retrive</button>
+            </div>
             <!-- Dropdown -->
             <div class="category">
                 <label for="category">Category:</label>
@@ -17,7 +18,7 @@
                     <option value="sports">Sports</option>
                     <option value="entertainment">Entertainment</option>
                     <option value="health">Health</option>
-                    <option value="General">Health</option>
+                    <option value="General">General</option>
                     <option value="science">Science</option>
                     <option value="technology">Technology</option>
                 </select>
@@ -25,39 +26,54 @@
         </div>
         <!-- News Body -->
         <div class="card">
-            <h1>Title</h1>
-            <p>Description</p>
-        </div>
-        <div class="card">
-            <h1>Title</h1>
-            <p>Description</p>
-        </div>
-        <div class="card">
-            <h1>Title</h1>
-            <p>Description</p>
-        </div>
-        <div class="card">
-            <h1>Title</h1>
-            <p>Description</p>
-            </div>
-            <!-- dropdown pagesize -->
-            <select id="pageSize">
-                <option value="25" selected>25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
+            <h3>Title</h3>
             <div>
-            <!-- pagination  -->
+                <p>Description</p>
+            </div>
+            <div>
+                <img src="" alt="image">
+            </div>
+            <div class="row">
+                <div class="auth">
+                    <p>Author</p>
+                </div>
+                <div class="date">
+                    Date
+                </div>
+            </div>
         </div>
-        <div class="btn">
-            <!-- Previous & Next  -->
-            <button class="bu">Next</button>
-            <button class="bu">Previous</button>
+        <div class="card">
+            <h1>Title</h1>
+            <p>Description</p>
         </div>
-       
+        <div class="card">
+            <h1>Title</h1>
+            <p>Description</p>
         </div>
+        <div class="card">
+            <h1>Title</h1>
+            <p>Description</p>
+        </div>
+        <!-- dropdown pagesize -->
+
+        <select id="pageSize">
+            <option value="25" selected>25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+    </div>
+
+    <!-- pagination  -->
+    <div class="btn">
+        <!-- Previous & Next  -->
+        <button class="bu">Next</button>
+        <button class="bu">Previous</button>
+    </div>
 </template>
-<script>
+<script lang="ts">
+
+
+
 
 </script>
 
@@ -69,8 +85,8 @@
 
 .card {
     background-color: rgb(207, 200, 200);
-padding: 10px;
-margin: 0 30px 30px 30px;
+    padding: 10px;
+    margin: 0 30px 30px 30px;
 }
 
 .search {
@@ -82,23 +98,33 @@ margin: 0 30px 30px 30px;
 .retrive {
     width: 33.33%;
     padding-left: 40px;
-    
+
 }
 
 .category {
     width: 33.33%;
     padding-left: 40px;
 }
-.btn{
+
+.btn {
     display: flex;
     justify-content: flex-end;
     align-content: center;
 }
-.bu{
-    margin: 0;
-}
-.r-btn{
+
+.bu {
     margin: 0;
 }
 
+.r-btn {
+    margin: 0;
+}
+
+.auth {
+    width: 50%;
+}
+
+.date {
+    width: 50%;
+}
 </style>

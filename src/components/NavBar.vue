@@ -1,6 +1,7 @@
 <template>
     <div class="navbar">
-    <h1>Navbar</h1>
+        <router-link to="/"><button>Home</button></router-link>
+    
 </div>
 </template>
 
@@ -10,6 +11,6 @@
 
 <style>
 .navbar{
-    background-color:black;
+    background-color:purple;
 }
 </style>

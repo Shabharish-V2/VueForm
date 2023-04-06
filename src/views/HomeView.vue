@@ -1,11 +1,28 @@
 <template>
-  <h1>home</h1>
+ 
+  <div>
+    <!-- Header -->
+    <div>
+     <NavBar />
+    </div>
+    <div class="row">
+      <!-- Body -->
+      <div class="sidebar">
+        <SideBar />
+      </div>
+      <div class="body">
+       <HeadLines/>
+      
+      </div>
+    </div>
+  </div>
 </template>
 
-<script>
-export default {
+<script setup lang="ts">
 
-}
+import HeadLines from "@/components/HeadLines.vue"
+import NavBar from "@/components/NavBar.vue";
+import SideBar from "@/components/SideBar.vue";
 </script>
 
 <style>
