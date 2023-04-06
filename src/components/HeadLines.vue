@@ -120,11 +120,11 @@
     margin: 0;
 }
 
-.auth {
-    width: 50%;
+.auth{
+width: 50%;
 }
-
-.date {
+.date{
     width: 50%;
 }
 </style>
+<!-- commit -->
