@@ -13,7 +13,7 @@
             <!-- News -->
             <div class="body">
                 <HeadLines />
-                <FranceFetch/>
+               
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
 import HeadLines from "@/components/HeadLines.vue";
 import NavBar from "@/components/NavBar.vue";
 import SideBar from "@/components/SideBar.vue";
-import FranceFetch from "@/components/FranceFetch.vue";
+
 </script>
 
 <style></style>

@@ -1,6 +1,8 @@
+
 <template>
     <div>
         <!-- Header -->
+
         <div class="row">
             <!-- Search -->
             <div class="search">
@@ -13,7 +15,7 @@
             <!-- Dropdown -->
             <div class="category">
                 <label for="category">Category:</label>
-                <select id="category" v-model="category">
+                <select id="category" ref="mySelect" @change="handleSelectChange">
                     <option value="business">Business</option>
                     <option value="sports">Sports</option>
                     <option value="entertainment">Entertainment</option>
@@ -25,43 +27,40 @@
             </div>
         </div>
         <!-- News Body -->
-        <div class="card">
-            <h3>Title</h3>
+        <div v-for="article in articles" :key="article.source.id" class="card">
+            <h3>Title:- </h3> {{ article.title }}
             <div>
-                <p>Description</p>
+                <b>
+                    <p>Description:- </p>
+                </b>{{ article.description }}
             </div>
+            <br />
             <div>
-                <img src="" alt="image">
+                <b>Image </b> <img src="{{article.urlToImage}}" alt="{{article.urlToImage}}">
             </div>
             <div class="row">
                 <div class="auth">
-                    <p>Author</p>
+                    <b>
+                        <p>Author</p>
+                    </b> {{ article.author }}
                 </div>
                 <div class="date">
-                    Date
+                    <b> Date </b> {{ article.date }}
                 </div>
             </div>
         </div>
-        <div class="card">
-            <h1>Title</h1>
-            <p>Description</p>
-        </div>
-        <div class="card">
-            <h1>Title</h1>
-            <p>Description</p>
-        </div>
-        <div class="card">
-            <h1>Title</h1>
-            <p>Description</p>
-        </div>
-        <!-- dropdown pagesize -->
+    </div>
 
+
+    <!-- dropdown pagesize -->
+    <div>
         <select id="pageSize">
             <option value="25" selected>25</option>
             <option value="50">50</option>
             <option value="100">100</option>
         </select>
     </div>
+
 
     <!-- pagination  -->
     <div class="btn">
@@ -70,10 +69,37 @@
         <button class="bu">Previous</button>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
+import { ref, onMounted, watch } from 'vue'
+import axios from 'axios';
+import { useRoute } from 'vue-router'
 
+const mySelect = ref(null);
+const selectedValue = ref();
 
+const handleSelectChange = () => {
+    selectedValue.value = mySelect.value.value;
+    console.log(selectedValue.value);
+}
+
+const apiKey = '46ffce870c8445629ff2a1b1038edab7'
+const articles = ref()
+const route = useRoute()
+const fetchData = async () => {
+    try {
+        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`)
+        articles.value = response.data.articles
+    } catch (error) {
+        console.error(error)
+    }
+}
+onMounted(() => {
+    fetchData()
+})
+watch(selectedValue, () => {
+    fetchData()
+})
 
 </script>
 
@@ -127,4 +153,3 @@ width: 50%;
     width: 50%;
 }
 </style>
-<!-- commit -->

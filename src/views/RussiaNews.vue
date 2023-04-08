@@ -13,14 +13,14 @@
             <!-- News -->
             <div class="body">
                 <HeadLines />
-               <RussiaFetch/>
+               
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import RussiaFetch from "@/components/RussiaFetch.vue";
+
 import HeadLines from "@/components/HeadLines.vue";
 import NavBar from "@/components/NavBar.vue";
 import SideBar from "@/components/SideBar.vue";

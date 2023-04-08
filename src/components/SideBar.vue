@@ -4,28 +4,37 @@
             <h2>Country</h2>
            
             <div>
-                <router-link to="/usa"><button class="button">USA</button></router-link>
+                <router-link :to="'/usa/'+ usa"><button class="button">USA</button></router-link>
             </div>
             <div>
-                <router-link to="/France"><button class="button">France</button></router-link>
+                <router-link :to="'/France/'+ france"><button class="button">France</button></router-link>
             </div>
             <div>
-                <router-link to="/Uk"><button class="button">United Kingdom</button></router-link>
+                <router-link :to="'/Uk/'+ uk"><button class="button">United Kingdom</button></router-link>
             </div>
             <div>
-                <router-link to="/Russ"><button class="button">Russia</button></router-link>
+                <router-link :to="'/Russ/'+ russia"><button class="button">Russia</button></router-link>
             </div>
             <div>
-                <router-link to="/Jap"><button class="button">Japan</button></router-link>
+                <router-link :to="'/Jap/'+ japan"><button class="button">Japan</button></router-link>
             </div>
             <div>
-                <router-link to="/south"><button class="button">South Korea</button></router-link>
+                <router-link :to="'/south/'+ korea"><button class="button">South Korea</button></router-link>
             </div>
         </div>
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref } from "vue";
+
+
+const usa = ref('us');
+const france = ref('fr');
+const uk = ref('gb');
+const russia = ref('ru');
+const japan = ref('jp');
+const korea = ref('kr');
 
 </script>
 
