@@ -2,7 +2,7 @@
 <template>
     <div>
         <!-- Header -->
-        
+
         <div class="row">
             <!-- Search -->
             <div class="search">
@@ -36,7 +36,7 @@
             </div>
             <br />
             <div>
-                <b>Image </b> <img :src="article.urlToImage" alt="{{article.title}}" :style="{ width: '500px' }">
+                <b>Image </b> <img :src="article.urlToImage" alt="{{article.title}}" :style="{ width: '350px' }">
             </div>
             <div class="row">
                 <div class="auth">
@@ -51,26 +51,29 @@
         </div>
     </div>
 
+    <div class="row">
+        <!-- dropdown pagesize -->
+        <div class="page-size">
+            <select id="pageSize" ref="pageSize" @change="handlePageLimitChange">
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+            </select>
+        </div>
+        <!-- page number -->
+        <div class="page-number">
+            Page {{ currentPage }} of {{ endIndex }}
+        </div>
 
-    <!-- dropdown pagesize -->
-    <div class="page-size">
-        <select id="pageSize" v-model="pageSize" @change="fetchData">
-            <option value="25" selected>25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
+        <!-- pagination  -->
+        <div class="btn nxtbtn">
+            <!-- <div v-for="(article, index) in articles.slice((currentPage - 1) * pageSize, currentPage * pageSize)" :key="index" class="card"> -->
+
+            <!-- Previous & Next  -->
+            <button class="bu" @click="next">Next</button>
+            <button class="bu" @click="previous">Previous</button>
+        </div>
     </div>
-
-
-    <!-- pagination  -->
-    <div class="btn">
-        <!-- <div v-for="(article, index) in articles.slice((currentPage - 1) * pageSize, currentPage * pageSize)" :key="index" class="card"> -->
-
-        <!-- Previous & Next  -->
-        <button class="bu" @click="next">Next</button>
-        <button class="bu" @click="previous">Previous</button>
-    </div>
-    
 </template>
 <script setup lang="ts">
 
@@ -86,24 +89,29 @@ const query = ref('');
 
 const currentPage = ref(1);
 
-const pageSize = ref(5);
+const pageSize = ref(15);
 
 const startIndex = (currentPage.value - 1) * pageSize.value;
 
 const endIndex = startIndex + pageSize.value;
 // const currentPage = ref(1);
-// const totalPages = computed(() => Math.ceil(articles.value.length / pageSize.value));
+const handlePageLimitChange = () => {
+    pageSize.value = pageSize.value.value;
+    console.log('test1??', pageSize.value)
+    fetchData(pageSize.value);
+
+}
 const loadNextPage = async () => {
 
-currentPage.value++;
+    currentPage.value++;
 
-const startIndex = (currentPage.value - 1) * pageSize.value;
+    const startIndex = (currentPage.value - 1) * pageSize.value;
 
- const endIndex = startIndex + pageSize.value;
+    const endIndex = startIndex + pageSize.value;
 
- const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
+    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
 
- articles.value = response.data.articles.slice(startIndex, endIndex);
+    articles.value = response.data.articles.slice(startIndex, endIndex);
 
 };
 
@@ -111,16 +119,15 @@ const startIndex = (currentPage.value - 1) * pageSize.value;
 
 
 const loadPreviousPage = async () => {
+    currentPage.value--;
 
- currentPage.value--;
+    const startIndex = (currentPage.value - 1) * pageSize.value;
 
- const startIndex = (currentPage.value - 1) * pageSize.value;
+    const endIndex = startIndex + pageSize.value;
 
- const endIndex = startIndex + pageSize.value;
+    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
 
- const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
-
- articles.value = response.data.articles.slice(startIndex, endIndex);
+    articles.value = response.data.articles.slice(startIndex, endIndex);
 
 };
 
@@ -130,19 +137,13 @@ const loadPreviousPage = async () => {
 
 const next = () => {
 
- 
-
   loadNextPage();
-
-  
 
 };
 
 const previous = () => {
 
- 
-
-   loadPreviousPage();
+loadPreviousPage();
 
 };
 
@@ -156,9 +157,11 @@ const handleSelectChange = () => {
 const apiKey = '46ffce870c8445629ff2a1b1038edab7'
 const articles = ref()
 const route = useRoute()
-const fetchData = async () => {
+const fetchData = async (x) => {
+
+    console.log("pageSize", x)
     try {
-        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`)
+        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}&pageSize=${x} `)
         // articles.value = response.data.articles;
         articles.value = response.data.articles.slice(startIndex, endIndex);
         // currentPage.value = 1;
@@ -168,32 +171,34 @@ const fetchData = async () => {
 };
 const search = async () => {
 
-const result = await axios.get('https://newsapi.org/v2/everything', {
+    const result = await axios.get('https://newsapi.org/v2/everything', {
 
- params: {
+        params: {
 
-   q: query.value,
+            q: query.value,
 
-   apiKey: `${apiKey}`,
+            apiKey: `${apiKey}`,
 
-},
+        },
 
-});
+    });
 
-articles.value = result.data.articles
+    articles.value = result.data.articles
 
 };
 const retrieveAndClear = () => {
- query.value = "";
- fetchData();
+    query.value = "";
+    fetchData();
 
 };
+
 onMounted(() => {
     fetchData()
 })
 watch(selectedValue, () => {
     fetchData()
 })
+
 
 
 </script>
@@ -241,11 +246,20 @@ watch(selectedValue, () => {
     margin: 0;
 }
 
-.auth{
-width: 50%;
-}
-.date{
+.auth {
     width: 50%;
+}
+
+.date {
+    width: 50%;
+}
+
+.page-number{
+margin-left: 300px;
+}
+
+.nxtbtn{
+    margin-left: 300px;
 }
 </style>
 <!-- hi -->
