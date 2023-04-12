@@ -70,8 +70,8 @@
             <!-- <div v-for="(article, index) in articles.slice((currentPage - 1) * pageSize, currentPage * pageSize)" :key="index" class="card"> -->
 
             <!-- Previous & Next  -->
-            <button class="bu" @click="next">Next</button>
-            <button class="bu" @click="previous">Previous</button>
+            <button class="bu" @click="loadNextPage">Next</button>
+            <button class="bu" @click="loadPreviousPage">Previous</button>
         </div>
     </div>
 </template>
@@ -102,14 +102,15 @@ const handlePageLimitChange = () => {
 
 }
 const loadNextPage = async () => {
+    console.log("loadNext",pageSize.value.value)
 
     currentPage.value++;
 
-    const startIndex = (currentPage.value - 1) * pageSize.value;
+    const startIndex = (currentPage.value ) + pageSize.value.value;
 
-    const endIndex = startIndex + pageSize.value;
+    const endIndex = startIndex + pageSize.value.value;
 
-    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
+    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}&pageSize=${pageSize.value.value}`);
 
     articles.value = response.data.articles.slice(startIndex, endIndex);
 
@@ -119,33 +120,36 @@ const loadNextPage = async () => {
 
 
 const loadPreviousPage = async () => {
+    console.log("loadPrevious",pageSize.value.value)
+
     currentPage.value--;
 
-    const startIndex = (currentPage.value - 1) * pageSize.value;
+    const startIndex = (currentPage.value - 1) * pageSize.value.value;
 
-    const endIndex = startIndex + pageSize.value;
+    const endIndex = startIndex + pageSize.value.value;
 
-    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
+    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}&pageSize=${pageSize.value.value}`);
 
     articles.value = response.data.articles.slice(startIndex, endIndex);
 
-};
-
-
-
-
-
-const next = () => {
-
-  loadNextPage();
 
 };
 
-const previous = () => {
 
-loadPreviousPage();
 
-};
+
+
+// const next = () => {
+
+//   loadNextPage();
+
+// };
+
+// const previous = () => {
+
+// loadPreviousPage();
+
+// };
 
 
 const handleSelectChange = () => {
@@ -157,7 +161,7 @@ const handleSelectChange = () => {
 const apiKey = '46ffce870c8445629ff2a1b1038edab7'
 const articles = ref()
 const route = useRoute()
-const fetchData = async (x) => {
+const fetchData = async (x:any) => {
 
     console.log("pageSize", x)
     try {
@@ -188,7 +192,7 @@ const search = async () => {
 };
 const retrieveAndClear = () => {
     query.value = "";
-    fetchData();
+    fetchData(5);
 
 };
 
