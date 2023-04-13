@@ -2,6 +2,7 @@
 <template>
     <div>
         <!-- Header -->
+    <div v-if="loading" class="loader">Loading...</div>
 
         <div class="row">
             <!-- Search -->
@@ -67,11 +68,12 @@
 
         <!-- pagination  -->
         <div class="btn nxtbtn">
-            <!-- <div v-for="(article, index) in articles.slice((currentPage - 1) * pageSize, currentPage * pageSize)" :key="index" class="card"> -->
+            
 
             <!-- Previous & Next  -->
-            <button class="bu" @click="loadNextPage">Next</button>
             <button class="bu" @click="loadPreviousPage">Previous</button>
+            <button class="bu" @click="loadNextPage">Next</button>
+           
         </div>
     </div>
 </template>
@@ -82,7 +84,7 @@ import axios from 'axios';
 import { useRoute } from 'vue-router'
 
 
-
+const loading = ref(false);
 const mySelect = ref(null);
 const selectedValue = ref();
 const query = ref('');
@@ -94,7 +96,7 @@ const pageSize = ref(15);
 const startIndex = (currentPage.value - 1) * pageSize.value;
 
 const endIndex = startIndex + pageSize.value;
-// const currentPage = ref(1);
+
 const handlePageLimitChange = () => {
     pageSize.value = pageSize.value.value;
     console.log('test1??', pageSize.value)
@@ -128,7 +130,7 @@ const loadPreviousPage = async () => {
 
     const endIndex = startIndex + pageSize.value.value;
 
-    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}&pageSize=${pageSize.value.value}`);
+    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
 
     articles.value = response.data.articles.slice(startIndex, endIndex);
 
@@ -138,18 +140,6 @@ const loadPreviousPage = async () => {
 
 
 
-
-// const next = () => {
-
-//   loadNextPage();
-
-// };
-
-// const previous = () => {
-
-// loadPreviousPage();
-
-// };
 
 
 const handleSelectChange = () => {
@@ -162,7 +152,7 @@ const apiKey = '46ffce870c8445629ff2a1b1038edab7'
 const articles = ref()
 const route = useRoute()
 const fetchData = async (pageSize:any) => {
-
+    loading.value = true;
     console.log("pageSize", pageSize)
     try {
         const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}&pageSize=${pageSize} `)
@@ -171,6 +161,8 @@ const fetchData = async (pageSize:any) => {
         // currentPage.value = 1;
     } catch (error) {
         console.error(error)
+    }finally {
+        loading.value = false;
     }
 };
 const search = async () => {
@@ -202,7 +194,6 @@ onMounted(() => {
 watch(selectedValue, () => {
     fetchData()
 })
-
 
 
 </script>
