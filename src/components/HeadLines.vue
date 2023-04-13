@@ -102,15 +102,15 @@ const handlePageLimitChange = () => {
 
 }
 const loadNextPage = async () => {
-    console.log("loadNext",pageSize.value.value)
+    console.log("loadNext",pageSize.value.value);
 
     currentPage.value++;
 
-    const startIndex = (currentPage.value ) + pageSize.value.value;
+    const startIndex = (currentPage.value + 1) * pageSize.value.value;
 
     const endIndex = startIndex + pageSize.value.value;
 
-    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}&pageSize=${pageSize.value.value}`);
+    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
 
     articles.value = response.data.articles.slice(startIndex, endIndex);
 
@@ -161,11 +161,11 @@ const handleSelectChange = () => {
 const apiKey = '46ffce870c8445629ff2a1b1038edab7'
 const articles = ref()
 const route = useRoute()
-const fetchData = async (x:any) => {
+const fetchData = async (pageSize:any) => {
 
-    console.log("pageSize", x)
+    console.log("pageSize", pageSize)
     try {
-        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}&pageSize=${x} `)
+        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}&pageSize=${pageSize} `)
         // articles.value = response.data.articles;
         articles.value = response.data.articles.slice(startIndex, endIndex);
         // currentPage.value = 1;
