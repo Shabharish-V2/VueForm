@@ -30,23 +30,24 @@
         <!-- News Body -->
         <div v-for="article in articles" :key="article.source.id" class="card">
             <h3>Title:- </h3> {{ article.title }}
-            <div>
+            <div v-if="article.description">
                 <b>
                     <p>Description:- </p>
                 </b>{{ article.description }}
             </div>
             <br />
-            <div>
+            <div v-if="article.urlToImage">
                 <b>Image </b> <img :src="article.urlToImage" alt="{{article.title}}" :style="{ width: '350px' }">
             </div>
             <div class="row">
-                <div class="auth">
+                
+                <div v-if="article.author" class="auth" >
                     <b>
                         <p>Author</p>
                     </b> {{ article.author }}
                 </div>
-                <div class="date">
-                    <b> Date </b> {{ article.publishedAt }}
+                <div v-if="article.publishedAt" class="date">
+                    <b> Date </b> {{new Date(article.publishedAt).toLocaleDateString('en-US', {day:'numeric', month: 'long', year:'numeric'}) }}
                 </div>
             </div>
         </div>
@@ -71,8 +72,8 @@
             
 
             <!-- Previous & Next  -->
-            <button class="bu" @click="loadPreviousPage">Previous</button>
-            <button class="bu" @click="loadNextPage">Next</button>
+            <button :disabled="isFirstPage" class="bu" @click="loadPreviousPage">Previous</button>
+            <button :disabled="isLastPage" class="bu" @click="loadNextPage">Next</button>
            
         </div>
     </div>
@@ -165,6 +166,24 @@ const fetchData = async (pageSize:any) => {
         loading.value = false;
     }
 };
+// try {
+//   const response = await axios.get('https://newsapi.org/v2/top-headlines', {
+//     params: {
+//       country: `${route.params.code}`,
+//       category: `${selectedValue.value}`,
+//       apiKey: `${apiKey}`,
+//       pageSize: pageSize.value,
+//     },
+//   });
+//   // articles.value = response.data.articles;
+//   articles.value = response.data.articles.slice(startIndex, endIndex);
+//   // currentPage.value = 1;
+// } catch (error) {
+//   console.error(error);
+// } finally {
+//   loading.value = false;
+// }
+
 const search = async () => {
 
     const result = await axios.get('https://newsapi.org/v2/everything', {
@@ -194,7 +213,12 @@ onMounted(() => {
 watch(selectedValue, () => {
     fetchData()
 })
-
+const isFirstPage = computed(() =>{
+    return currentPage.value === 1;
+});
+const isLastPage = computed(() =>{
+    return currentPage.value === endIndex;
+});
 
 </script>
 
