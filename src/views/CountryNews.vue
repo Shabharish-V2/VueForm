@@ -4,7 +4,7 @@
         <div>
             <NavBar />
         </div>
-        <h1>South Korea NEWS</h1>
+        <h1></h1>
         <!-- Body -->
         <div class="row">
             <div class="sidebar">
@@ -13,7 +13,7 @@
             <!-- News -->
             <div class="body">
                 <HeadLines />
-             
+              
             </div>
         </div>
     </div>
@@ -24,4 +24,4 @@ import HeadLines from "@/components/HeadLines.vue";
 import NavBar from "@/components/NavBar.vue";
 import SideBar from "@/components/SideBar.vue";
 
-</script>
+</script> 

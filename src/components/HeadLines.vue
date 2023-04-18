@@ -57,9 +57,9 @@
         <!-- dropdown pagesize -->
         <div class="page-size">
             <select id="pageSize" ref="pageSize" @change="handlePageLimitChange">
-                <option value="5" selected>5</option>
+                <option value="5" >5</option>
                 <option value="10">10</option>
-                <option value="15">15</option>
+                <option value="15" selected>15</option>
             </select>
         </div>
         <!-- page number -->
@@ -152,11 +152,11 @@ const handleSelectChange = () => {
 const apiKey = '46ffce870c8445629ff2a1b1038edab7'
 const articles = ref()
 const route = useRoute()
-const fetchData = async (pageSize:any) => {
+const fetchData = async () => {
     loading.value = true;
     console.log("pageSize", pageSize)
     try {
-        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}&pageSize=${pageSize} `)
+        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}&pageSize=${pageSize.value}`)
         // articles.value = response.data.articles;
         articles.value = response.data.articles.slice(startIndex, endIndex);
         // currentPage.value = 1;
@@ -207,12 +207,30 @@ const retrieveAndClear = () => {
 
 };
 
+const loadData = async () => {
+    try {
+        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&apiKey=${apiKey}`)
+       
+        articles.value = response.data.articles.slice(startIndex, endIndex);
+        
+    } catch (error) {
+        console.error(error)
+    }finally {
+        loading.value = false;
+    }
+};
 onMounted(() => {
-    fetchData()
+loadData();
 })
 watch(selectedValue, () => {
     fetchData()
+    
 })
+watch(pageSize, () => {
+    fetchData()
+    
+})
+
 const isFirstPage = computed(() =>{
     return currentPage.value === 1;
 });

@@ -5,31 +5,53 @@
 
 
             <div>
-                <router-link :to="'/usa/' + usa" active-class="selectedbtn">
-                    <button class="button" :class="{ 'selectedbtnactive': $route.path === '/usa/' + usa }">USA</button>
+                <router-link :to="'/country/' + usa" >
+                    <button class="button"
+                        :class="{ 'dynamicCLass': $route.path === '/country' && selected === 'usa', 'selected': selected === 'usa' }"
+                        @click="selected = 'usa'">USA</button>
                 </router-link>
             </div>
-            
+
             <div>
 
-                <router-link :to="'/France/' + france" active-class="selectedbtn">
-                    <button class="button" :class="{'selectedbtnactive': $route.path === '/France/' + france}">France</button></router-link>
+                <router-link :to="'/country/' + france" >
+                    <button class="button"
+                        :class="{ 'dynamicClass': $route.path === '/country' && selected === 'france', 'selected': selected === 'france' }"
+                        @click="selected = 'france'">France</button>
+                </router-link>
             </div>
             <div>
-                <router-link :to="'/Uk/' + uk" active-class="selectedbtn">
-                    <button class="button" :class="{'selectedbtnactive': $route.path === '/Uk/' + uk}">United Kingdom</button></router-link>
+                <router-link :to="'/country/' + uk" >
+                    <button class="button" 
+                    :class="{
+                        'dynamicClass': $route.path === '/country' &&
+                            selected === 'uk', 'selected': selected === 'uk'
+                    }" @click="selected = 'uk'">United Kingdom</button>
+                </router-link>
             </div>
             <div>
-                <router-link :to="'/Russ/' + russia" active-class="selectedbtn">
-                    <button class="button" :class="{'selectedbtnactive': $route.path === '/Russ/' + russia}">Russia</button></router-link>
+                <router-link :to="'/country/' + russia" >
+                    <button class="button" :class="{
+                        'dynamicClass': $route.path === '/country' &&
+                            selected === 'russia', 'selected': selected === 'russia'
+                    }"
+                        @click="selected = 'russia'">Russia</button></router-link>
             </div>
             <div>
-                <router-link :to="'/Jap/' + japan" active-class="selectedbtn">
-                    <button class="button" :class="{'selectedbtnactive': $route.path === '/Jap/' + japan}">Japan</button></router-link>
+                <router-link :to="'/country/' + japan" >
+                    <button class="button" :class="{
+                        'dynamicClass': $route.path === '/country' &&
+                            selected === 'japan', 'selected': selected === 'japan'
+                    }"
+                        @click="selected = 'japan'">Japan</button></router-link>
             </div>
             <div>
-                <router-link :to="'/south/' + korea" active-class="selectedbtn">
-                    <button class="button" :class="{'selectedbtnactive': $route.path === '/south/' + korea}">South Korea</button></router-link>
+                <router-link :to="'/country/' + korea" >
+                    <button class="button" :class="{
+                        'dynamicClass': $route.path === '/country' &&
+                            selected === 'korea', 'selected': selected === 'korea'
+                    }" @click="selected =
+    'korea'">South Korea</button></router-link>
             </div>
         </div>
     </div>
@@ -38,7 +60,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-
+const selected = ref('');
 
 const usa = ref('us');
 const france = ref('fr');
@@ -59,12 +81,12 @@ button {
     margin-top: 20px;
     margin-left: 20px;
     padding: 5px;
-border-radius: 30px;
+    border-radius: 30px;
 
 }
 
-.selectedbtnactive {
+
+
+.selected {
     background-color: lightsalmon;
-    color: white;
-}
-</style>
+}</style>
