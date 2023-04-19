@@ -91,7 +91,7 @@ const selectedValue = ref();
 const query = ref('');
 
 const currentPage = ref(1);
-
+const totalPages = ref(0);
 const pageSize = ref(15);
 
 const startIndex = (currentPage.value - 1) * pageSize.value;
@@ -104,43 +104,52 @@ const handlePageLimitChange = () => {
     fetchData(pageSize.value);
 
 }
-const loadNextPage = async () => {
-    console.log("loadNext",pageSize.value.value);
+// const loadNextPage = async () => {
+//     console.log("loadNext",pageSize.value.value);
 
+//     currentPage.value++;
+
+//     const startIndex = (currentPage.value + 1) * pageSize.value.value;
+
+//     const endIndex = startIndex + pageSize.value.value;
+
+//     const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
+
+//     // articles.value = response.data.articles.slice(startIndex, endIndex);
+
+// };
+
+
+
+
+// const loadPreviousPage = async () => {
+//     console.log("loadPrevious",pageSize.value.value)
+
+//     currentPage.value--;
+
+//     const startIndex = (currentPage.value - 1) * pageSize.value.value;
+
+//     const endIndex = startIndex + pageSize.value.value;
+
+//     const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
+
+    // articles.value = response.data.articles.slice(startIndex, endIndex);
+
+
+// };
+const loadPreviousPage=() => {
+  if (currentPage.value > 1) {
+      currentPage.value--;
+    fetchData();
+  }
+}
+
+const loadNextPage=() => {
+  if (currentPage.value < totalPages.value) {
     currentPage.value++;
-
-    const startIndex = (currentPage.value + 1) * pageSize.value.value;
-
-    const endIndex = startIndex + pageSize.value.value;
-
-    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
-
-    articles.value = response.data.articles.slice(startIndex, endIndex);
-
-};
-
-
-
-
-const loadPreviousPage = async () => {
-    console.log("loadPrevious",pageSize.value.value)
-
-    currentPage.value--;
-
-    const startIndex = (currentPage.value - 1) * pageSize.value.value;
-
-    const endIndex = startIndex + pageSize.value.value;
-
-    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
-
-    articles.value = response.data.articles.slice(startIndex, endIndex);
-
-
-};
-
-
-
-
+    fetchData();
+  }
+}
 
 
 const handleSelectChange = () => {
@@ -149,40 +158,36 @@ const handleSelectChange = () => {
     console.log(selectedValue.value);
 }
 
-const apiKey = '46ffce870c8445629ff2a1b1038edab7'
-const articles = ref()
-const route = useRoute()
+
+const apiKey = '46ffce870c8445629ff2a1b1038edab7';
+const articles = ref();
+const route = useRoute();
 const fetchData = async () => {
+    
     loading.value = true;
-    console.log("pageSize", pageSize)
+    console.log("pageSize", pageSize);
     try {
-        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}&pageSize=${pageSize.value}`)
-        // articles.value = response.data.articles;
-        articles.value = response.data.articles.slice(startIndex, endIndex);
-        // currentPage.value = 1;
+        const response = await axios({
+            method: 'GET',
+            url: 'https://newsapi.org/v2/top-headlines',
+            params: {
+                country: route.params.code,
+                category: selectedValue.value,
+                apiKey: apiKey,
+                pageSize: pageSize.value,
+                page: currentPage.value
+            }
+        });
+        articles.value = response.data.articles;
+        totalPages.value = Math.ceil(response.data.totalResults / pageSize.value);
+       
     } catch (error) {
-        console.error(error)
-    }finally {
+        console.error(error);
+    } finally {
         loading.value = false;
     }
 };
-// try {
-//   const response = await axios.get('https://newsapi.org/v2/top-headlines', {
-//     params: {
-//       country: `${route.params.code}`,
-//       category: `${selectedValue.value}`,
-//       apiKey: `${apiKey}`,
-//       pageSize: pageSize.value,
-//     },
-//   });
-//   // articles.value = response.data.articles;
-//   articles.value = response.data.articles.slice(startIndex, endIndex);
-//   // currentPage.value = 1;
-// } catch (error) {
-//   console.error(error);
-// } finally {
-//   loading.value = false;
-// }
+
 
 const search = async () => {
 
@@ -203,11 +208,13 @@ const search = async () => {
 };
 const retrieveAndClear = () => {
     query.value = "";
-    fetchData(5);
+    fetchData();
 
 };
 
 const loadData = async () => {
+   
+    
     try {
         const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&apiKey=${apiKey}`)
        
@@ -219,8 +226,14 @@ const loadData = async () => {
         loading.value = false;
     }
 };
+const cli = () => {
+  loadData();
+  fetchData();
+}
 onMounted(() => {
 loadData();
+fetchData();
+
 })
 watch(selectedValue, () => {
     fetchData()
@@ -228,7 +241,6 @@ watch(selectedValue, () => {
 })
 watch(pageSize, () => {
     fetchData()
-    
 })
 
 const isFirstPage = computed(() =>{
