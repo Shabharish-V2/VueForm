@@ -59,12 +59,12 @@
             <select id="pageSize" ref="pageSize" @change="handlePageLimitChange">
                 <option value="5" >5</option>
                 <option value="10">10</option>
-                <option value="15" selected>15</option>
+                <option value="15">15</option>
             </select>
         </div>
         <!-- page number -->
         <div class="page-number">
-            Page {{ currentPage }} of {{ endIndex }}
+            Page {{ currentPage }} 
         </div>
 
         <!-- pagination  -->
@@ -72,8 +72,8 @@
             
 
             <!-- Previous & Next  -->
-            <button :disabled="isFirstPage" class="bu" @click="loadPreviousPage">Previous</button>
-            <button :disabled="isLastPage" class="bu" @click="loadNextPage">Next</button>
+            <button :disabled="currentPage == 1" class="bu" @click="loadPreviousPage">Previous</button>
+            <button  class="bu" @click="loadNextPage">Next</button>
            
         </div>
     </div>
@@ -91,17 +91,14 @@ const selectedValue = ref();
 const query = ref('');
 
 const currentPage = ref(1);
-const totalPages = ref(0);
-const pageSize = ref(15);
+const totalPages = ref();
+const pageSize = ref();
 
-const startIndex = (currentPage.value - 1) * pageSize.value;
 
-const endIndex = startIndex + pageSize.value;
 
 const handlePageLimitChange = () => {
     pageSize.value = pageSize.value.value;
-    console.log('test1??', pageSize.value)
-    fetchData(pageSize.value);
+    fetchData()
 
 }
 // const loadNextPage = async () => {
@@ -140,14 +137,20 @@ const handlePageLimitChange = () => {
 const loadPreviousPage=() => {
   if (currentPage.value > 1) {
       currentPage.value--;
-    fetchData(pageSize.value);
+    fetchData();
   }
 }
 
 const loadNextPage=() => {
-  if (currentPage.value < totalPages.value) {
+    console.log(currentPage.value)
+    console.log(totalPages.value)
+  if (currentPage.value <= totalPages.value) {
+    console.log('ok')
     currentPage.value++;
-    fetchData(pageSize.value);
+    fetchData();
+  }
+  else{
+    console.log('error')
   }
 }
 
@@ -175,13 +178,14 @@ const fetchData = async () => {
                 category: selectedValue.value,
                 apiKey: apiKey,
                 pageSize: pageSize.value,
-                page: currentPage.value,
-                
+                page: currentPage.value,     
             }
         });
         articles.value = response.data.articles;
-        totalPages.value = Math.ceil(response.data.totalResults / pageSize.value);
-       
+        if (response.data.totalResults && pageSize.value) {
+            totalPages.value = Math.ceil(response.data.totalResults / pageSize.value);
+        }
+        console.log(totalPages.value)
     } catch (error) {
         console.error(error);
     } finally {
@@ -213,23 +217,9 @@ const retrieveAndClear = () => {
 
 };
 
-const loadData = async () => {
-   
-    
-    try {
-        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&apiKey=${apiKey}`)
-       
-        articles.value = response.data.articles.slice(startIndex, endIndex);
-        
-    } catch (error) {
-        console.error(error)
-    }finally {
-        loading.value = false;
-    }
-};
+
 
 onMounted(() => {
-loadData();
 fetchData();
 
 })
@@ -242,15 +232,6 @@ watch(pageSize,  () => {
 })
 watch(() => route.params.code, () => {
   fetchData();
-});
-
-
-
-const isFirstPage = computed(() =>{
-    return currentPage.value === 1;
-});
-const isLastPage = computed(() =>{
-    return currentPage.value === endIndex;
 });
 
 </script>
