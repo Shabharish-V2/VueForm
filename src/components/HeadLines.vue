@@ -140,14 +140,14 @@ const handlePageLimitChange = () => {
 const loadPreviousPage=() => {
   if (currentPage.value > 1) {
       currentPage.value--;
-    fetchData();
+    fetchData(pageSize.value);
   }
 }
 
 const loadNextPage=() => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
-    fetchData();
+    fetchData(pageSize.value);
   }
 }
 
@@ -175,7 +175,8 @@ const fetchData = async () => {
                 category: selectedValue.value,
                 apiKey: apiKey,
                 pageSize: pageSize.value,
-                page: currentPage.value
+                page: currentPage.value,
+                
             }
         });
         articles.value = response.data.articles;
@@ -226,10 +227,7 @@ const loadData = async () => {
         loading.value = false;
     }
 };
-const cli = () => {
-  loadData();
-  fetchData();
-}
+
 onMounted(() => {
 loadData();
 fetchData();
@@ -239,9 +237,14 @@ watch(selectedValue, () => {
     fetchData()
     
 })
-watch(pageSize, () => {
+watch(pageSize,  () => {
     fetchData()
 })
+watch(() => route.params.code, () => {
+  fetchData();
+});
+
+
 
 const isFirstPage = computed(() =>{
     return currentPage.value === 1;
