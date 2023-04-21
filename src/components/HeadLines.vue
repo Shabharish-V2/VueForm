@@ -28,6 +28,8 @@
             </div>
         </div>
         <!-- News Body -->
+        <div v-if="!errorMessage">
+
         <div v-for="article in articles" :key="article.source.id" class="card">
             <h3>Title:- </h3> {{ article.title }}
             <div v-if="article.description">
@@ -51,6 +53,14 @@
                 </div>
             </div>
         </div>
+
+    </div>
+    <div v-else>
+       <span style="color: red">
+        {{ errorMessage }}
+       </span> 
+    </div>
+
     </div>
 
     <div class="row">
@@ -73,7 +83,7 @@
 
             <!-- Previous & Next  -->
             <button :disabled="currentPage == 1" class="bu" @click="loadPreviousPage">Previous</button>
-            <button  class="bu" @click="loadNextPage">Next</button>
+            <button :disabled="currentPage == totalPages"  class="bu" @click="loadNextPage">Next</button>
            
         </div>
     </div>
@@ -92,7 +102,8 @@ const query = ref('');
 
 const currentPage = ref(1);
 const totalPages = ref();
-const pageSize = ref();
+const pageSize = ref(5);
+const errorMessage = ref('');
 
 
 
@@ -168,7 +179,7 @@ const route = useRoute();
 const fetchData = async () => {
     
     loading.value = true;
-    console.log("pageSize", pageSize);
+    console.log("pageSizeibi",  pageSize.value.value);
     try {
         const response = await axios({
             method: 'GET',
@@ -177,18 +188,21 @@ const fetchData = async () => {
                 country: route.params.code,
                 category: selectedValue.value,
                 apiKey: apiKey,
-                pageSize: pageSize.value,
+                pageSize: pageSize.value.value,
                 page: currentPage.value,     
             }
         });
         articles.value = response.data.articles;
+       
         if (response.data.totalResults && pageSize.value) {
-            totalPages.value = Math.ceil(response.data.totalResults / pageSize.value);
+            console.log(" in if tp", totalPages.value);
+            totalPages.value = Math.ceil(response.data.totalResults / pageSize.value.value);
         }
-        console.log(totalPages.value)
+       
     } catch (error) {
         console.error(error);
-    } finally {
+        errorMessage.value = error.message;
+        } finally {
         loading.value = false;
     }
 };
