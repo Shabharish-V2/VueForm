@@ -112,39 +112,8 @@ const handlePageLimitChange = () => {
     fetchData()
 
 }
-// const loadNextPage = async () => {
-//     console.log("loadNext",pageSize.value.value);
-
-//     currentPage.value++;
-
-//     const startIndex = (currentPage.value + 1) * pageSize.value.value;
-
-//     const endIndex = startIndex + pageSize.value.value;
-
-//     const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
-
-//     // articles.value = response.data.articles.slice(startIndex, endIndex);
-
-// };
 
 
-
-
-// const loadPreviousPage = async () => {
-//     console.log("loadPrevious",pageSize.value.value)
-
-//     currentPage.value--;
-
-//     const startIndex = (currentPage.value - 1) * pageSize.value.value;
-
-//     const endIndex = startIndex + pageSize.value.value;
-
-//     const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=${route.params.code}&category=${selectedValue.value}&apiKey=${apiKey}`);
-
-    // articles.value = response.data.articles.slice(startIndex, endIndex);
-
-
-// };
 const loadPreviousPage=() => {
   if (currentPage.value > 1) {
       currentPage.value--;
@@ -156,7 +125,7 @@ const loadNextPage=() => {
     console.log(currentPage.value)
     console.log(totalPages.value)
   if (currentPage.value <= totalPages.value) {
-    console.log('ok')
+    
     currentPage.value++;
     fetchData();
   }
@@ -195,7 +164,6 @@ const fetchData = async () => {
         articles.value = response.data.articles;
        
         if (response.data.totalResults && pageSize.value) {
-            console.log(" in if tp", totalPages.value);
             totalPages.value = Math.ceil(response.data.totalResults / pageSize.value.value);
         }
        
